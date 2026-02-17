@@ -1,0 +1,75 @@
+dataset: databricks/unity_catalog/soda_demo/finance_loans
+filter: batch_ts >= ${var.timestamp_ub} - INTERVAL 48 HOURS AND batch_ts <
+  ${var.timestamp_ub}
+variables:
+  timestamp_ub:
+    default: "'${soda.NOW}'"
+check_attributes:
+  data_product:
+    - Loans
+  compliance:
+    - BCBS239
+  data_domain:
+    - Finance
+  environment: prod
+  importance: 7
+checks:
+  - schema: {}
+columns:
+  - name: loan_product_id
+    data_type: string
+  - name: batch_ts
+    data_type: timestamp
+  - name: batch_date
+    data_type: date
+  - name: is_anomaly
+    data_type: boolean
+  - name: id
+    data_type: int
+  - name: customer_id
+    data_type: string
+    checks:
+      - duplicate:
+          name: Unique customer_id per 48h window
+  - name: base_interest_rate
+    data_type: double
+  - name: loan_id
+    data_type: string
+    checks:
+      - missing:
+          name: loan_id completeness
+          qualifier: z2m9f
+          threshold:
+            metric: percent
+            must_be_less_than_or_equal: 0
+  - name: loan_amount
+    data_type: decimal
+    checks:
+      - invalid:
+          name: Loan amount must not exceed 47,000
+          valid_max: 47000
+      - invalid:
+          name: Loan amount must be non-negative
+          valid_min: 0
+          qualifier: asdflkj
+  - name: loan_term_months
+    data_type: int
+  - name: interest_rate
+    data_type: double
+    checks:
+      - invalid:
+          name: Interest rate must be between 0 and 100
+          valid_min: 0
+          valid_max: 100
+  - name: application_status
+    data_type: string
+    checks:
+      - invalid:
+          name: Application status allowed values
+          valid_values:
+            - APPROVED
+            - REJECTED
+  - name: application_ts
+    data_type: timestamp
+  - name: loan_purpose
+    data_type: string

@@ -1,0 +1,42 @@
+resources:
+  jobs:
+    ETL_Pipeline_with_Soda_Data_Contract_Tests:
+      name: ETL Pipeline with Soda Data Contract Tests
+      tasks:
+        - task_key: extract
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/placeholder_tasks/extract
+            source: WORKSPACE
+        - task_key: test_extract
+          depends_on:
+            - task_key: extract
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/run_data_contract
+            source: WORKSPACE
+        - task_key: load
+          depends_on:
+            - task_key: test_extract
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/placeholder_tasks/load
+            source: WORKSPACE
+        - task_key: test_load
+          depends_on:
+            - task_key: load
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/run_data_contract
+            source: WORKSPACE
+        - task_key: transform
+          depends_on:
+            - task_key: test_load
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/placeholder_tasks/transform
+            source: WORKSPACE
+        - task_key: test_transform
+          depends_on:
+            - task_key: transform
+          notebook_task:
+            notebook_path: /Workspace/Users/tyler.adkins@soda.io/databricks-webinar-feb17/run_data_contract
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
