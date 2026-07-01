@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Soda Webinar · Live Poll</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f8f6;
+      --text: #0b1f18;
+      --muted: #5d6f68;
+      --line: #e3ebe7;
+      --green: #00a36c;
+      --green2: #00d892;
+      --grad: linear-gradient(90deg, #00b377 0%, #00d892 100%);
+      --shadow: 0 1px 3px rgba(11,31,24,.06), 0 10px 30px rgba(11,31,24,.05);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(1100px 500px at 50% -12%, #e7f8f0 0%, var(--bg) 55%) fixed;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      padding: 12px clamp(12px, 3.5vw, 40px) 24px;
+    }
+
+    .brandbar { display:flex; align-items:center; max-width:1500px; margin:0 auto 8px; }
+    .brand { display:inline-flex; align-items:center; gap:10px; }
+    .brand .logo { height: 34px; width:auto; display:block; }
+    .brand .name { font-size:22px; font-weight:800; letter-spacing:-.01em; color:var(--text); }
+
+    header { text-align: center; margin: 6px 0 18px; }
+    .bigtitle { margin:0; font-weight:800; letter-spacing:-.015em; line-height:1.1; font-size:clamp(30px,5vw,52px); color:var(--text); }
+    .subtitle { color: var(--green); font-weight:700; font-size:clamp(13px,1.5vw,16px); margin-top:4px; }
+    .join {
+      display:inline-flex; align-items:center; gap:12px; margin-top:14px; padding:10px 22px;
+      background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow);
+    }
+    .join .label { color: var(--muted); font-size:clamp(13px,1.4vw,16px); }
+    .join .url {
+      font-weight:800; font-size:clamp(22px,3vw,36px); line-height:1.25; padding-bottom:1px;
+      background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; letter-spacing:-.01em;
+    }
+    .demo-badge { margin-top:10px; display:inline-block; padding:5px 13px; border-radius:999px; background:#fff6dd; border:1px solid #ecc54e; color:#7a5b00; font-size:12px; font-weight:700; }
+
+    .grid { display:grid; gap:14px; grid-template-columns:1fr 1fr; max-width:1500px; margin:0 auto; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px 18px 18px; box-shadow:var(--shadow); }
+    .card.wide { grid-column: 1 / -1; }
+    @media (max-width: 880px){ .grid { grid-template-columns: 1fr; } }
+
+    .qnum { color: var(--green); font-weight:700; font-size:12px; letter-spacing:.07em; text-transform:uppercase; }
+    .qtitle { font-size:clamp(16px,1.9vw,21px); font-weight:700; margin:4px 0 12px; }
+    .total { color: var(--muted); font-size:12px; font-weight:600; margin-top:6px; }
+
+    .opts { display:flex; flex-direction:column; gap:8px; }
+    .chip {
+      appearance:none; cursor:pointer; text-align:left; width:100%;
+      background:#f7faf9; color:var(--text); border:1px solid var(--line); border-radius:11px;
+      padding:13px 15px; font-size:15px; transition:.15s; font-weight:600;
+    }
+    .chip:hover { border-color:var(--green2); background:rgba(0,216,146,.08); }
+    .chip.sel { border-color:var(--green); background:rgba(0,216,146,.16); }
+    .chip.sel::before { content:"✓ "; color:var(--green); }
+    .multi { display:flex; flex-wrap:wrap; gap:8px; }
+    .multi .chip { width:auto; flex:0 0 auto; }
+    .otherrow { display:flex; gap:8px; margin-top:10px; }
+    input[type=text]{
+      flex:1; background:#fff; border:1px solid var(--line); border-radius:11px;
+      color:var(--text); padding:12px 14px; font-size:15px; min-width:0;
+    }
+    input[type=text]::placeholder{ color:var(--muted); }
+    .btn { cursor:pointer; border:none; border-radius:11px; padding:12px 20px; font-weight:800; font-size:15px; background:var(--grad); color:#06231a; }
+    .status { color:var(--green); font-weight:700; font-size:13.5px; margin-top:12px; display:none; }
+
+    .bars { margin-top:14px; display:flex; flex-direction:column; gap:10px; }
+    .bar-row .bar-top { display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px; }
+    .bar-row .pct { color:var(--muted); font-variant-numeric:tabular-nums; }
+    .bar-track { height:16px; background:#eef2f0; border-radius:9px; overflow:hidden; }
+    .bar-fill { height:100%; width:0; background:var(--grad); border-radius:9px; transition:width .6s cubic-bezier(.2,.8,.2,1); }
+
+    .cloud { margin-top:6px; min-height:120px; display:flex; flex-wrap:wrap; gap:9px; align-items:center; justify-content:center; }
+    .pill {
+      display:inline-flex; align-items:center; gap:9px;
+      padding:.5em .85em; border-radius:999px; font-weight:700; line-height:1.1;
+      background:var(--pc); color:#fff; white-space:nowrap; box-shadow:0 2px 6px rgba(11,31,24,.12);
+    }
+    .pill .n { font-size:.62em; font-weight:800; padding:.15em .55em; border-radius:999px; background:#fff; color:var(--pc); font-variant-numeric:tabular-nums; }
+    .cloud-empty { color:var(--muted); padding:40px 0; }
+
+    body.voting .bars, body.voting .cloud, body.voting .total { display:none; }
+    body.results .opts, body.results .multi, body.results .otherrow, body.results .status { display:none; }
+    body.results .qnum, body.results .total { display:none; }
+
+    footer { text-align:center; color:var(--muted); font-size:12px; margin-top:18px; }
+    a.modelink { color:var(--green); text-decoration:none; border-bottom:1px dotted var(--green); font-weight:600; }
+  </style>
+</head>
+<body class="voting">
+  <div class="brandbar">
+    <span class="brand">
+      <img class="logo" src="https://trust.soda.io/api/share/5c5908bd-60e4-4356-9f22-814701db5841/logo.png?version=3" alt="Soda logo" />
+    </span>
+  </div>
+
+  <header>
+    <h1 class="bigtitle">How to Implement Data Contracts in Production at Scale</h1>
+    <div class="subtitle">2026-06-25</div>
+    <div class="join">
+      <span class="label">Go to</span>
+      <span class="url" id="joinUrl">your-link-here</span>
+    </div>
+    <div id="demoSlot"></div>
+  </header>
+
+  <div class="grid">
+    <section class="card" data-q="1">
+      <div class="qnum">Question 1</div>
+      <div class="qtitle">What's your experience with <strong>data contracts</strong>?</div>
+      <div class="opts"></div>
+      <div class="status"></div>
+      <div class="bars"></div>
+      <div class="total"><span class="cnt">0</span> responses</div>
+    </section>
+
+    <section class="card" data-q="2">
+      <div class="qnum">Question 2</div>
+      <div class="qtitle">What's your experience with <strong>agentic coding tools</strong>?</div>
+      <div class="opts"></div>
+      <div class="status"></div>
+      <div class="bars"></div>
+      <div class="total"><span class="cnt">0</span> responses</div>
+    </section>
+
+    <section class="card wide" data-q="3">
+      <div class="qnum">Question 3 &middot; pick all that apply</div>
+      <div class="qtitle">Which <strong>data quality problems</strong> hurt most?</div>
+      <div class="multi"></div>
+      <div class="otherrow">
+        <input type="text" id="otherText" maxlength="120" placeholder="Other — type your own (separate several with commas)…" />
+        <button class="btn" id="submitQ3">Submit</button>
+      </div>
+      <div class="status"></div>
+      <div class="cloud" id="cloud"><div class="cloud-empty">Responses will appear here…</div></div>
+      <div class="total"><span class="cnt">0</span> selections</div>
+    </section>
+  </div>
+
+  <footer id="footer"></footer>
+
+  <!-- Supabase project config — gitignored; generated from ../.env by ./gen-config.sh -->
+  <script src="config.js"></script>
+  <script>
+    /* ================== CONFIG ================== */
+    // Injected by config.js (never committed). Copy config.example.js -> config.js,
+    // or run ./gen-config.sh to generate it from ../.env.
+    const CFG = window.SODA_POLL_CONFIG || {};
+    const SUPABASE_URL = CFG.supabaseUrl;
+    const SUPABASE_KEY = CFG.supabaseKey;
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
+      throw new Error("Missing Supabase config: copy poll/config.example.js to poll/config.js (or run ./gen-config.sh).");
+    }
+    const JOIN_URL_TEXT = "is.gd/sodapoll";
+
+    const QUESTIONS = {
+      1: { type: "single", options: ["Heard of them", "Interested / experimenting", "Some usage", "Heavy usage"] },
+      2: { type: "single", options: ["Heard of them", "Interested / experimenting", "Some usage", "Heavy usage"] },
+      3: { type: "multi", options: [
+        "Stale or late data", "Schema changes break things", "Reconciliation mismatches",
+        "Volume / row-count anomalies", "Missing values & nulls", "Duplicate records",
+        "Invalid or malformed values", "Alert fatigue & false alarms"
+      ]}
+    };
+    const CLOUD_COLORS = ["#00a36c","#0096a8","#2a7de1","#7a5cff","#e0653c","#c77b2e","#1aa179","#d4477f"];
+    const SHORT = {
+      "Stale or late data": "Stale data",
+      "Schema changes break things": "Schema changes",
+      "Reconciliation mismatches": "Reconciliation",
+      "Volume / row-count anomalies": "Volume anomalies",
+      "Missing values & nulls": "Missing / nulls",
+      "Duplicate records": "Duplicates",
+      "Invalid or malformed values": "Invalid values",
+      "Alert fatigue & false alarms": "Alert fatigue"
+    };
+    /* ============================================ */
+
+    const params = new URLSearchParams(location.search);
+    const DEMO = params.get("demo") === "1";
+    const RESULTS = params.get("view") === "results";
+    const VOTEFORCE = params.get("vote") === "1";   // "back to voting" / "change my answers"
+    document.getElementById("joinUrl").textContent = JOIN_URL_TEXT;
+
+    function go(view) {
+      location.href = location.pathname + (view === "results" ? "?view=results" : "?vote=1");
+    }
+
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    function voterId() {
+      let v = localStorage.getItem("voter_id");
+      if (!v) { v = crypto.randomUUID(); localStorage.setItem("voter_id", v); }
+      return v;
+    }
+    // a stable id per browser so "latest answer wins"; demo uses fresh ids to pile up votes
+    function currentVoter(){ return DEMO ? crypto.randomUUID() : voterId(); }
+
+    const myVotes = DEMO ? {} : JSON.parse(localStorage.getItem("myVotes") || "{}"); // {1:val,2:val,3:[...]}
+    function saveMine(){ localStorage.setItem("myVotes", JSON.stringify(myVotes)); }
+    const voted = {};
+    [1,2].forEach(q => { if (myVotes[q]) voted[q] = true; });
+    if ((myVotes[3] || []).length) voted[3] = true;
+    const allVoted = () => voted[1] && voted[2] && voted[3];
+
+    // ---- decide view ----
+    if (RESULTS) {
+      document.body.className = "results";
+    } else {
+      document.body.className = "voting";
+      if (!DEMO && !VOTEFORCE && allVoted()) go("results");   // returning finished voter → results
+    }
+    if (DEMO) {
+      const b = document.createElement("div");
+      b.className = "demo-badge";
+      b.textContent = "DEMO MODE — vote as many times as you like";
+      document.getElementById("demoSlot").appendChild(b);
+    }
+    const path = location.pathname;
+    document.getElementById("footer").innerHTML = RESULTS
+      ? `<a class="modelink" href="${path}?vote=1">← back to voting / change my answers</a>`
+      : (VOTEFORCE
+          ? `<a class="modelink" href="${path}?view=results">Done — view live results →</a>`
+          : `Presenter? <a class="modelink" href="${path}?view=results">Open the live results screen →</a>`);
+
+    let counts = { 1:{}, 2:{}, 3:{} };
+
+    function setStatus(card, text){ const el = card.querySelector(".status"); el.textContent = text; el.style.display = "block"; }
+
+    /* ---------- build vote controls ---------- */
+    if (!RESULTS) {
+      for (const q of [1,2]) {
+        const card = document.querySelector(`[data-q="${q}"]`);
+        const wrap = card.querySelector(".opts");
+        QUESTIONS[q].options.forEach(opt => {
+          const b = document.createElement("button");
+          b.className = "chip" + (myVotes[q] === opt ? " sel" : "");
+          b.textContent = opt;
+          b.onclick = () => chooseSingle(q, opt, card);
+          wrap.appendChild(b);
+        });
+        if (myVotes[q]) setStatus(card, "✓ Saved — tap another option to change your answer");
+      }
+      const card3 = document.querySelector(`[data-q="3"]`);
+      const multiWrap = card3.querySelector(".multi");
+      window.sel3 = new Set(myVotes[3] || []);
+      QUESTIONS[3].options.forEach(opt => {
+        const b = document.createElement("button");
+        b.className = "chip" + (window.sel3.has(opt) ? " sel" : "");
+        b.textContent = opt;
+        b.onclick = () => { if (b.classList.toggle("sel")) window.sel3.add(opt); else window.sel3.delete(opt); };
+        multiWrap.appendChild(b);
+      });
+      if ((myVotes[3] || []).length) setStatus(card3, "✓ Saved — adjust and Submit again to change your answer");
+      document.getElementById("submitQ3").onclick = () => submitMulti(card3);
+    }
+
+    function maybeFinish(){ if (!DEMO && !VOTEFORCE && allVoted()) setTimeout(() => go("results"), 700); }
+
+    async function chooseSingle(q, value, card) {
+      card.querySelectorAll(".opts .chip").forEach(c => c.classList.toggle("sel", c.textContent === value));
+      myVotes[q] = value; saveMine(); voted[q] = true;
+      setStatus(card, "✓ Saved — tap another option to change your answer");
+      const { error } = await sb.from("votes").insert({ question_id: q, value, voter_id: currentVoter() });
+      if (error) console.error(error);
+      maybeFinish();
+    }
+    async function submitMulti(card) {
+      const vid = currentVoter();
+      const values = new Set([...window.sel3]);
+      document.getElementById("otherText").value
+        .split(",").map(s => s.trim()).filter(Boolean)
+        .forEach(t => values.add(t.slice(0, 60)));
+      if (!values.size) return;
+      myVotes[3] = [...window.sel3]; saveMine(); voted[3] = true;
+      setStatus(card, "✓ Saved — adjust and Submit again to change your answer");
+      const rows = [...values].map(value => ({ question_id: 3, value, is_other: !window.sel3.has(value), voter_id: vid }));
+      const { error } = await sb.from("votes").insert(rows);
+      if (error) console.error(error);
+      maybeFinish();
+    }
+
+    /* ---------- load + render (latest answer per voter wins) ---------- */
+    async function refresh() {
+      const { data, error } = await sb.from("votes").select("question_id, value, voter_id, created_at");
+      if (error) { console.error(error); return; }
+      counts = { 1:{}, 2:{}, 3:{} };
+      for (const q of [1,2,3]) {
+        const latest = {}; // voter_id -> { ts, vals:Set }
+        for (const r of data) {
+          if (r.question_id !== q) continue;
+          const cur = latest[r.voter_id];
+          if (!cur || r.created_at > cur.ts) latest[r.voter_id] = { ts: r.created_at, vals: new Set([r.value]) };
+          else if (r.created_at === cur.ts) cur.vals.add(r.value);   // same batch (multi-select)
+        }
+        for (const v in latest) for (const val of latest[v].vals) counts[q][val] = (counts[q][val] || 0) + 1;
+      }
+      if (RESULTS) { renderBars(1); renderBars(2); renderCloud(); }
+    }
+
+    function renderBars(q) {
+      const card = document.querySelector(`[data-q="${q}"]`);
+      const wrap = card.querySelector(".bars");
+      const c = counts[q];
+      const total = Object.values(c).reduce((a,b)=>a+b, 0);
+      card.querySelector(".cnt").textContent = total;
+      wrap.innerHTML = "";
+      QUESTIONS[q].options.forEach(opt => {
+        const n = c[opt] || 0;
+        const pct = total ? Math.round((n/total)*100) : 0;
+        const row = document.createElement("div");
+        row.className = "bar-row";
+        row.innerHTML = `<div class="bar-top"><span>${opt}</span><span class="pct">${n} &middot; ${pct}%</span></div>
+                         <div class="bar-track"><div class="bar-fill"></div></div>`;
+        wrap.appendChild(row);
+        requestAnimationFrame(()=> { row.querySelector(".bar-fill").style.width = pct + "%"; });
+      });
+    }
+
+    function esc(s){ return s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+    function renderCloud() {
+      const cloud = document.getElementById("cloud");
+      const entries = Object.entries(counts[3]).sort((a,b)=>b[1]-a[1]);
+      const total = entries.reduce((a,[,n])=>a+n, 0);
+      document.querySelector(`[data-q="3"] .cnt`).textContent = total;
+      if (!entries.length) { cloud.innerHTML = `<div class="cloud-empty">Responses will appear here…</div>`; return; }
+      const max = Math.max(...entries.map(([,n]) => n));
+      cloud.innerHTML = entries.map(([word, n], i) => {
+        const size = (14 + (n / max) * 12).toFixed(1);
+        const col = CLOUD_COLORS[i % CLOUD_COLORS.length];
+        const label = SHORT[word] || word;
+        return `<span class="pill" style="font-size:${size}px;--pc:${col}">${esc(label)}<span class="n">${n}</span></span>`;
+      }).join("");
+    }
+
+    sb.channel("votes-live")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "votes" }, () => refresh())
+      .subscribe();
+
+    refresh();
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+type: postgres
+name: soda_webinar_20260625
+connection:
+    host: ${env.POSTGRES_HOST}
+    port: 5432
+    user: postgres
+    password: ${env.POSTGRES_PASSWORD}
+    database: postgres

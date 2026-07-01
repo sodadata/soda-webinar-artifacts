@@ -1,0 +1,4 @@
+soda_cloud:
+  host: dev.sodadata.io
+  api_key_id: ${env.SODA_API_KEY_ID}
+  api_key_secret: ${env.SODA_API_KEY_SECRET}

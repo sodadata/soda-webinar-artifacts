@@ -1,0 +1,123 @@
+product_id,name,category,price,cost,stock_quantity,currency,active
+SKU-0001,Toys item 1,Toys,812.59,479.92,187,USD,true
+SKU-0002,Grocery item 2,,263.59,999.00,386,USD,true
+SKU-0003,Clothing item 3,Clothing,394.03,296.59,247,USD,true
+SKU-0004,Books item 4,Books,353.28,229.53,129,USD,true
+SKU-0005,Toys item 5,Toys,549.82,411.48,203,USD,true
+SKU-0006,Books item 6,Books,812.61,999.00,382,USD,true
+SKU-0007,Clothing item 7,Clothing,425.65,304.21,82,,true
+SKU-0008,Home & Kitchen item 8,Home & Kitchen,205.70,119.36,173,USD,true
+SKU-0009,Automotive item 9,Automotive,584.29,413.71,26,USD,true
+SKU-0010,Books item 10,Books,371.18,254.68,411,USD,true
+SKU-0011,Home & Kitchen item 11,Home & Kitchen,782.53,479.10,307,USD,true
+SKU-0012,Beauty item 12,Beauty,86.01,44.59,189,USD,true
+SKU-0013,Home & Kitchen item 13,Home & Kitchen,579.55,420.77,476,USD,true
+SKU-0014,Beauty item 14,Beauty,584.23,370.67,364,USD,true
+SKU-0015,Grocery item 15,Grocery,56.95,42.61,89,USD,true
+SKU-0016,Garden item 16,Home and Kitchen,418.43,205.35,336,USD,true
+SKU-0017,Automotive item 17,Automotive,273.49,113.53,306,USD,true
+SKU-0018,Automotive item 18,Automotive,491.23,247.70,86,USD,true
+SKU-0019,Electronics item 19,Electronics,343.35,238.55,499,USD,true
+SKU-0020,Books item 20,Books,84.78,44.44,204,USD,true
+SKU-0021,Sports item 21,Sports,637.00,371.02,102,USD,true
+SKU-0022,Automotive item 22,,17.06,12.23,470,USD,true
+SKU-0023,Home & Kitchen item 23,Home & Kitchen,523.24,380.27,286,USD,true
+SKU-0024,Grocery item 24,Grocery,332.32,276.98,141,USD,true
+SKU-0025,Clothing item 25,Clothing,577.03,281.32,476,USD,true
+SKU-0026,Beauty item 26,Beauty,547.22,283.19,208,GBP,true
+SKU-0027,Automotive item 27,Automotive,103.38,44.72,150,USD,true
+SKU-0028,Sports item 28,Sports,899.80,685.04,489,USD,true
+SKU-0029,Toys item 29,Toys,832.62,637.72,294,USD,true
+SKU-0030,Toys item 30,Toys,660.25,551.13,288,USD,true
+SKU-0031,Garden item 31,Garden,732.04,542.34,492,USD,true
+SKU-0032,Garden item 32,Garden,648.31,999.00,441,USD,true
+SKU-0033,Electronics item 33,Electronics,-19.99,236.94,195,USD,true
+SKU-0034,Clothing item 34,Clothing,643.88,324.17,161,USD,true
+SKU-0035,Beauty item 35,Beauty,907.78,574.10,4,USD,true
+SKU-0036,Toys item 36,,237.72,105.04,344,USD,true
+SKU-0037,Sports item 37,Sports,74.54,61.06,243,USD,true
+SKU-0038,Sports item 38,Sports,337.48,270.81,137,USD,true
+SKU-0039,Books item 39,Books,0.01,636.58,465,USD,true
+SKU-0040,Clothing item 40,Clothing,475.30,232.83,376,USD,true
+SKU-0041,Clothing item 41,Clothing,829.42,408.95,103,USD,true
+SKU-0042,Clothing item 42,Clothing,794.93,445.33,398,USD,true
+SKU-0043,Home & Kitchen item 43,Home & Kitchen,116.08,50.53,489,USD,true
+SKU-0044,Garden item 44,Garden,584.10,434.52,277,USD,true
+SKU-0045,Electronics item 45,Electronics,805.99,457.03,161,USD,true
+SKU-0046,Garden item 46,Garden,853.47,679.74,294,USD,true
+SKU-0047,Toys item 47,Toys,467.54,394.13,468,EUR,true
+SKU-0048,Automotive item 48,Automotive,268.05,134.01,295,USD,true
+SKU-0049,Books item 49,Books,53.81,40.88,244,USD,true
+SKU-0050,Automotive item 50,Automotive,33.35,18.55,440,USD,true
+SKU-0051,Books item 51, Books ,435.69,197.88,265,USD,true
+SKU-0052,Garden item 52,Garden,301.58,121.77,345,USD,true
+SKU-0053,Clothing item 53,Clothing,362.01,161.22,185,USD,true
+SKU-0054,Grocery item 54,Grocery,819.10,396.62,134,USD,true
+SKU-0055,Clothing item 55,Clothing,257.76,214.29,175,USD,true
+SKU-0056,Sports item 56,Sports,176.76,104.43,214,USD,true
+SKU-0057,Sports item 57,Sports,348.41,202.17,230,USD,true
+SKU-0058,Books item 58,Books,543.91,457.25,351,USD,true
+SKU-0059,Clothing item 59,Clothing,773.95,560.62,411,USD,true
+SKU-0060,Clothing item 60,Clothing,528.68,415.19,100,USD,true
+SKU-0061,Books item 61,Books,760.54,556.98,242,USD,true
+SKU-0062,Electronics item 62,Electronics,0.00,106.12,457,USD,true
+SKU-0063,Automotive item 63,Automotive,508.45,275.62,249,USD,true
+SKU-0064,Toys item 64,Toys,240.30,188.95,24,USD,true
+SKU-0065,Beauty item 65,Beauty,96.28,45.59,110,USD,true
+SKU-0066,Toys item 66,Toys,454.02,310.29,230,USD,true
+SKU-0067,Sports item 67,Sports,248.63,139.76,285,USD,true
+SKU-0068,Toys item 68,Toys,328.57,192.31,179,USD,true
+SKU-0069,Grocery item 69,Grocery,191.01,125.90,332,USD,true
+SKU-0070,Automotive item 70,Automotive,167.88,126.10,181,USD,true
+SKU-0071,Sports item 71,Sports,640.35,396.61,377,USD,true
+SKU-0072,Garden item 72,Garden,845.43,483.15,146,USD,true
+SKU-0073,Garden item 73,Garden,601.05,279.60,85,USD,true
+SKU-0074,Sports item 74,Sports,402.17,271.68,207,USD,true
+SKU-0075,Home & Kitchen item 75,electronics,77.46,42.96,160,USD,true
+SKU-0076,Sports item 76,Sports,621.23,447.10,309,USD,true
+SKU-0077,Beauty item 77,Beauty,259.51,155.76,441,USD,true
+SKU-0078,Sports item 78,Sports,711.13,451.16,230,USD,true
+SKU-0079,Beauty item 79,Beauty,161.03,126.31,64,USD,true
+SKU-0080,Clothing item 80,Clothing,629.77,518.42,358,USD,true
+SKU-0081,Home & Kitchen item 81,Home & Kitchen,202.02,116.90,48,USD,true
+SKU-0082,Home & Kitchen item 82,Home & Kitchen,99999.99,545.58,27,USD,true
+SKU-0083,Electronics item 83,Electronics,732.96,466.01,42,USD,true
+SKU-0084,Home & Kitchen item 84,Home & Kitchen,251.17,118.02,335,USD,true
+SKU-0085,Beauty item 85,Beauty,295.63,151.16,145,USD,true
+SKU-0086,Garden item 86,Garden,596.09,273.65,429,USD,true
+SKU-0087,Books item 87,Books,29.57,20.66,440,USD,true
+SKU-0088,Sports item 88,Sports,821.37,501.23,445,USD,true
+SKU-0089,Automotive item 89,Automotive,888.28,574.58,69,USD,true
+SKU-0090,Automotive item 90,Automotive,170.24,113.88,323,USD,true
+SKU-0091,Grocery item 91,Grocery,414.64,285.23,273,USD,true
+SKU-0092,Toys item 92,Toys,863.70,532.68,116,USD,true
+SKU-0093,Home & Kitchen item 93,Home & Kitchen,421.16,237.79,133,USD,true
+SKU-0094,Books item 94,Books,290.14,116.07,417,USD,true
+SKU-0095,Books item 95,Books,328.33,200.66,4,USD,true
+SKU-0096,Garden item 96,Garden,899.74,553.05,4,USD,true
+SKU-0097,Beauty item 97,Beauty,758.57,507.22,407,USD,true
+SKU-0098,Electronics item 98,Electronics,521.93,253.06,451,USD,true
+SKU-0099,Automotive item 99,Automotive,416.66,213.52,366,USD,true
+SKU-0100,Beauty item 100,Beauty,787.43,393.14,40,USD,true
+SKU-0101,Beauty item 101,Beauty,594.99,376.32,409,USD,true
+SKU-0102,Grocery item 102,,767.68,543.59,-3,USD,true
+SKU-0103,Automotive item 103,Automotive,768.85,450.40,436,USD,true
+SKU-0104,Home & Kitchen item 104,Home & Kitchen,175.33,92.98,326,USD,true
+SKU-0105,Garden item 105,Garden,587.80,307.10,318,USD,true
+SKU-0106,Garden item 106,Garden,180.43,73.75,25,USD,true
+SKU-0107,Automotive item 107,Automotive,23.47,19.66,144,USD,true
+SKU-0108,Toys item 108,Toys,120.97,72.25,4,USD,true
+SKU-0109,Clothing item 109,Clothing,87.96,35.77,111,USD,true
+SKU-0110,Sports item 110,Sports,400.68,301.94,255,USD,true
+SKU-0111,Sports item 111,Sports,441.84,334.09,169,usd,true
+SKU-0112,Home & Kitchen item 112,Home & Kitchen,801.76,664.05,28,USD,true
+SKU-0113,Toys item 113,Toys,737.43,318.66,240,USD,true
+SKU-0114,Books item 114,Books,184.60,143.75,418,GBP,true
+SKU-0115,Beauty item 115,Beauty,787.27,358.12,393,USD,true
+SKU-0116,Clothing item 116,Clothing,367.10,307.90,126,USD,true
+SKU-0117,Electronics item 117,Electronics,191.22,139.76,48,USD,true
+SKU-0118,Automotive item 118,Automotive,633.54,312.84,199,USD,true
+SKU-0119,Toys item 119,Toys,889.56,419.32,372,USD,true
+SKU-0120,Electronics item 120,Electronics,708.13,458.38,62,USD,true
+SKU-0075,Relisted,electronics,77.46,42.96,160,USD,true
+,Mystery item,Beauty,594.99,376.32,409,USD,true
