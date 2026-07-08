@@ -1,9 +1,10 @@
 # Databricks notebook source
 import base64
+import os
 import requests
 base_sc_host = "cloud.us.soda.io"
 SODA_CLOUD_BASE_URL = f"https://{base_sc_host}/api/v1"
-api_keys = f"01bad54a-ad93-4d29-bd39-2be15c397f41:hN5dCi5y4g1LaLiB4_VAzZqa-n3UD_sos5NUXY7_Pqsfr3lF-Ua71Q".encode("utf-8")
+api_keys = f"{os.environ['SODA_API_KEY_ID']}:{os.environ['SODA_API_KEY_SECRET']}".encode("utf-8")
 SODA_CLOUD_BASIC_TOKEN = base64.b64encode(api_keys).decode("ascii")
 TIMEOUT_SECONDS = 60
 
