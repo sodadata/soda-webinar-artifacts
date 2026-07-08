@@ -14,6 +14,7 @@ DEMO_PROMPT="${DEMO_PROMPT:-$'\033[38;5;208m➜\033[0m \033[36msoda-demo\033[0m 
 _C_CMD=$'\033[1;37m'      # bold white  - commands
 _C_COMMENT=$'\033[38;5;245m'  # grey   - narration
 _C_DONE=$'\033[38;5;71m'  # muted green - done indicator
+_C_NOTE=$'\033[38;5;214m' # amber       - demo notes / caveats
 _C_RST=$'\033[0m'
 
 # Wait for a single keypress from the controlling terminal.
@@ -42,6 +43,17 @@ say() {
   prompt
   printf '%s' "$_C_COMMENT"
   _type "# $1"
+  printf '%s' "$_C_RST"
+  _key
+  printf '\n'
+}
+
+# note: an amber caveat line — used to tell the audience when the demo is
+# standing in for something (e.g. a command from a library that isn't installed).
+note() {
+  prompt
+  printf '%s' "$_C_NOTE"
+  _type "# note: $1"
   printf '%s' "$_C_RST"
   _key
   printf '\n'

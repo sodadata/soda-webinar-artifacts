@@ -18,13 +18,8 @@ cd "$ROOT"
 
 source "$HERE/lib.sh"
 
-# --- environment: credentials from ../.env + the demo venv -------------------
-set -a; . "$ROOT/../.env"; set +a
-. "$ROOT/.venv/bin/activate"
-
-# Make sure the Soda CLI (sodacli) is authenticated — silent, no secret on screen.
-sodacli auth login --host "https://${SODA_CLOUD_HOST#https://}" \
-  --api-key-id "$SODA_API_KEY_ID" --api-key-secret "$SODA_API_KEY_SECRET" >/dev/null 2>&1 || true
+# --- environment: credentials from ../.env -----------------------------------
+set -a; . "$ROOT/../.env" 2>/dev/null; set +a
 
 # The Soda Cloud data source "soda_webinar_20260625" is a persistent, runner-backed
 # fixture: its credentials live in a Cloud secret (not here), and an online Soda
@@ -46,6 +41,36 @@ rm -f "$ROOT/$CONTRACT"
 
 if [ "${RESET_ONLY:-0}" = "1" ]; then restore; trap - EXIT; echo "Restored $CONTRACT."; exit 0; fi
 
+# --- Python env: soda-core from public PyPI (built fresh if missing) ---------
+# soda-core + soda-postgres are all this demo needs to VERIFY a contract and
+# publish results to Soda Cloud. `soda contract create` (Step 2) additionally
+# needs Soda's extensions library, which is NOT on public PyPI. We detect it
+# below; if it's absent we stand in with a pre-generated skeleton so the rest of
+# the demo still runs. Reuse an already-working venv (it may include extensions);
+# otherwise build a clean one from public PyPI.
+ensure_venv() {
+  if [ -x "$ROOT/.venv/bin/python" ] \
+     && "$ROOT/.venv/bin/python" -c "import soda_core" >/dev/null 2>&1 \
+     && "$ROOT/.venv/bin/soda" --help >/dev/null 2>&1; then
+    :   # existing, working venv — reuse as-is
+  else
+    echo "Setting up a Python virtualenv with soda-core (public PyPI)…"
+    rm -rf "$ROOT/.venv"
+    python3 -m venv "$ROOT/.venv"
+    "$ROOT/.venv/bin/python" -m pip install --quiet --upgrade pip
+    "$ROOT/.venv/bin/python" -m pip install --quiet soda-core soda-postgres
+  fi
+  . "$ROOT/.venv/bin/activate"
+}
+ensure_venv
+
+# Is Soda's extensions library (provides `soda contract create`) importable?
+if python -c "import soda.contract_generator" >/dev/null 2>&1; then
+  HAS_EXTENSIONS=1
+else
+  HAS_EXTENSIONS=0
+fi
+
 clear
 
 # --- 1. load the FAILING data -----------------------------------------------
@@ -54,7 +79,13 @@ cmd "bash ../data/load_failing.sh"
 
 # --- 2. generate a basic contract -------------------------------------------
 say "Step 2 — generate a basic contract straight from the table's metadata."
-cmd "soda contract create -d $DATASET -ds postgres.yml -f $CONTRACT"
+if [ "$HAS_EXTENSIONS" = "1" ]; then
+  cmd "soda contract create -d $DATASET -ds postgres.yml -f $CONTRACT"
+else
+  note "'soda contract create' ships in Soda's extensions library, which isn't on public PyPI."
+  note "Standing in with a pre-generated skeleton — identical to what the generator emits."
+  cmd "cp parts/customers.skeleton.contract.yml $CONTRACT"
+fi
 say "The skeleton: every column, its data type, and a schema check."
 cmd "cat $CONTRACT"
 

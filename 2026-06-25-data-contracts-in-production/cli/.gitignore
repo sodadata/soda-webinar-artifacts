@@ -1,0 +1,4 @@
+# Generated at demo time — recreated by demo.sh on each run.
+customers.contract.yml
+.contract.backup
+.venv/
