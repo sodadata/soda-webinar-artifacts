@@ -3,9 +3,7 @@ use variables in .env
 
 - Use Soda MCP
 - Use existing datasource named soda_webinar_20260625
-- onboard all five tables in the postgres schema
-- create contracts using autopilot
-- configure bigquery as diagnostics warehouse
-- verify all five contracts
-- once finished, query bigquery and pull down failed rows
-- generate a markdown report showing failed rows by failing check type
+- onboard customers, orders, and products tables in postgres schema soda_webinar_20260625 and turn on failed frow collection
+- create contracts using autopilot for all three datasets
+- verify all contracts
+- once finished, query dwh in bigquery and pull down failed rows for most recent scan, display a sample from each table along with the reason it failed
